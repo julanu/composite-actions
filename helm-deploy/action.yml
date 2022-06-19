@@ -6,6 +6,11 @@ inputs:
     description: "Name for the Helm chart to be installed"
     default: ${{ github.event.repository.name }}
 
+  release_name:
+    required: true
+    description: "Name for your Helm release"
+    default: "my-chart"
+
   registry_url:
     required: true
     description: "Registry to the Helm repository hosting the chart"
@@ -45,12 +50,12 @@ runs:
     - name: Dry-Run Helm Chart for Microservice
       shell: bash
       run: |
-        helm install --dry-run --debug ${{ inputs.registry_name }}/${{ inputs.chart_name }} --version ${{ inputs.chart_version }} -n ${{ inputs.namespace }}
+        helm install --dry-run ${{ inputs.release_name }} ${{ inputs.registry_name }}/${{ inputs.chart_name }} --version ${{ inputs.chart_version }} -n ${{ inputs.namespace }}
 
     - name: Upgrade the Helm release w/ atomic
       shell: bash
       run: |
-        helm upgrade --install ${{ inputs.registry_name }}/${{ inputs.chart_name }} --version ${{ inputs.chart_version }} --atomic --cleanup-on-fail --timeout 600s -n ${{ inputs.namespace }}
+        helm upgrade --install ${{ inputs.release_name }} ${{ inputs.registry_name }}/${{ inputs.chart_name }} --version ${{ inputs.chart_version }} --atomic --cleanup-on-fail --timeout 600s -n ${{ inputs.namespace }}
 
     - name: View state of resources
       shell: bash
