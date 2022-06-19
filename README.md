@@ -1,12 +1,9 @@
 ## composite-actions 
 Repository containing multiple composite Github Actions(multiple declared in a YML which will evaluate to a single Github Action) for CI/CD pipelines.
-
-
 <br/>
 
 ### Available composite actions:
 - Docker Build & Push Image to DockerHub
-
 <br/>
 
 ### Usage:
