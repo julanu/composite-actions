@@ -28,7 +28,8 @@ Look for for the latest version available on the [Releases](https://github.com/j
     uses: julanu/composite-actions/helm-deploy@latest
     with:
       chart_name: my-chart
-      registry_url:   https://charts.helm.sh/stable
+      registry_url: https://charts.helm.sh/stable
+      registry_name: bitnami
       namespace: testing
       chart_version: 4.1.14
 ```
