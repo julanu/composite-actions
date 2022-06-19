@@ -1,0 +1,77 @@
+name: "Build & Push Image to Docker Hub"
+
+inputs:
+  registry_user:
+    required: true
+    description: "User/ID used for authenticating against Docker registry"
+
+  registry_pwd:
+    required: true
+    description: "Secret used for authenticating against Docker registry"
+
+  image_name:
+    required: true
+    default: ${{ github.GITHUB_REPOSITORY }}
+    description: "Name of the Docker Image. Default is username/repository from which the action is triggered"
+
+  tag:
+    required: true
+    default: latest
+    description: "Tag for the Docker Image"
+
+  context:
+    required: false
+    default: .
+    description: "Context for the Docker build. Default is `.`"
+    
+  dockerfile:
+    required: true
+    default: './Dockerfile'
+    description: "Relative path to the Dockerfile"
+
+  platforms:
+    required: false
+    default: linux/arm64,linux/amd64
+    description: "Platforms for which the Docker Image should be compiled. Default is AMD64/ARM64"
+
+  build_args:
+    required: false
+    default: ""
+    description: 'Build arguments for the Docker Image'
+
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      with:
+          fetch-depth: 0
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{inputs.registry_user}}
+        password: ${{inputs.registry_pwd}}
+
+    - name: INFO - Output Dockerfile
+      shell: bash
+      run: cat ${{inputs.dockerfile}}
+
+    - name: Build and Push Docker Image
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: ${{inputs.image_name}}:${{inputs.tag}}
+        context: ${{inputs.context}}
+        file: ${{inputs.dockerfile}}
+        platforms: ${{inputs.platforms}}
+        build-args: ${{ inputs.build_args }}
