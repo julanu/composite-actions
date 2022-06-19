@@ -1,0 +1,57 @@
+name: "Deploy Helm Chart to Kubernetes"
+
+inputs:
+  chart_name:
+    required: true
+    description: "Name for the Helm chart to be installed"
+    default: ${{ github.event.repository.name }}
+
+  registry_url:
+    required: true
+    description: "Registry to the Helm repository hosting the chart"
+
+  registry_name:
+    required: true
+    description: "Name for the Helm repository holding your charts"
+
+  namespace:
+    required: true
+    description: "Namespace for the release to be installed"
+
+  chart_version:
+    required: true
+    description: "Version for the Helm chart. (default: 0.1.0)"
+    default: 0.1.0
+
+
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+          fetch-depth: 0
+
+    - name: Add Helm Repository
+      shell: bash
+      run: helm repo add ${{ inputs.registry_name }} ${{ inputs.registry_url }}
+
+    - name: Update Helm Repository
+      shell: bash
+      run: helm repo update
+
+    - name: Dry-Run Helm Chart for Microservice
+      shell: bash
+      run: |
+        helm install --dry-run --debug ${{ inputs.registry_name }} ${{ inputs.chart_name }} --version ${{ inputs.chart_version }} -n ${{ inputs.namespace }}
+
+    - name: Upgrade the Helm release w/ atomic
+      shell: bash
+      run: |
+        helm upgrade --install ${{ inputs.registry_name }} ${{ inputs.chart_name }} --version ${{ inputs.chart_version }} --atomic --cleanup-on-fail --timeout 600s -n ${{ inputs.namespace }}
+
+    - name: View state of resources
+      shell: bash
+      run: kubectl get all,secret -n ${{ inputs.namespace }}
