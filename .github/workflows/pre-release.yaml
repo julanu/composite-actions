@@ -1,0 +1,22 @@
+# Workflow to create a pre-release for testing the composite actions
+name: "pre-release-publishing"
+
+on:
+  push:
+
+jobs:
+  pre-release:
+    name: "Publish test-release"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "test-release"
+          prerelease: true
+          title: "development release"
+          files: |
+            README.md
