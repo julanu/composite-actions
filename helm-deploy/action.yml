@@ -80,7 +80,7 @@ runs:
       if: ${{ inputs.helm_values_file != null }}
       shell: bash
       run: |
-        helm upgrade -f ${{ inputs.helm_values_file }}--install ${{ inputs.release_name }} ${{ inputs.registry_name }}/${{ inputs.chart_name }} --version ${{ inputs.chart_version }} --atomic --cleanup-on-fail --timeout 600s -n ${{ inputs.namespace }}
+        helm upgrade -f ${{ inputs.helm_values_file }} --install ${{ inputs.release_name }} ${{ inputs.registry_name }}/${{ inputs.chart_name }} --version ${{ inputs.chart_version }} --atomic --cleanup-on-fail --timeout 600s -n ${{ inputs.namespace }}
       ###
 
     - name: View state of resources
