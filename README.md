@@ -34,6 +34,4 @@ Look for for the latest version available on the [Releases](https://github.com/j
       namespace: testing
       chart_version: 4.1.14
       helm_values_file: values.yaml
-      values_overrides: ""
-      
 ```

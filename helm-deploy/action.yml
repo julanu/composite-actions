@@ -32,10 +32,6 @@ inputs:
     required: false
     description: "Relative path to the values.yaml file for the Helm chart"
 
-  values_overrides:
-    required: false
-    description: "Override values for your Helm install"
-
 
 runs:
   using: "composite"
