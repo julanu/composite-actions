@@ -1,5 +1,6 @@
 ## composite-actions - 
 Repository containing multiple composite Github Actions(multiple declared in a YML which will evaluate to a single Github Action) for CI/CD pipelines.
+This project assumes that you have a Github self-hosted runner running on your Kubernetes cluster that will have the necessary rights to perform operations on the Kubernetes API.
 <br/>
 
 ## Usage of available composite actions:
@@ -23,7 +24,7 @@ Look for for the latest version available on the [Releases](https://github.com/j
 ```
 ### 2. Deploy Helm chart to Kubernetes  
 ```yaml
-  # Add Helm repository, update, dry-run and install
+  # Add Helm repository, update repository, dry-run and install
   - name: Helm Deploy to Kubernetes
     uses: julanu/composite-actions/helm-deploy@latest
     with:
@@ -32,4 +33,7 @@ Look for for the latest version available on the [Releases](https://github.com/j
       registry_name: bitnami
       namespace: testing
       chart_version: 4.1.14
+      helm_values_file: values.yaml
+      values_overrides: ""
+      
 ```

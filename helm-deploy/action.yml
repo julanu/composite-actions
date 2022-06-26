@@ -1,8 +1,5 @@
 name: "Deploy Helm Chart to Kubernetes"
 
-# ToDo Add namespace overrides
-# ToDo Add override arguments to install
-# ToDo Test overrides and values
 inputs:
   chart_name:
     required: true
@@ -37,7 +34,7 @@ inputs:
 
   values_overrides:
     required: false
-    description: ""
+    description: "Override values for your Helm install"
 
 
 runs:
@@ -77,13 +74,13 @@ runs:
       if: ${{ inputs.helm_values_file != null }}
       shell: bash
       run: |
-        helm install --dry-run ${{ inputs.release_name }} ${{ inputs.registry_name }}/${{ inputs.chart_name }} --version ${{ inputs.chart_version }} -n ${{ inputs.namespace }}
+        helm install -f ${{ inputs.helm_values_file }} --dry-run ${{ inputs.release_name }} ${{ inputs.registry_name }}/${{ inputs.chart_name }} --version ${{ inputs.chart_version }} -n ${{ inputs.namespace }}
 
     - name: Upgrade the Helm release w/ atomic & values.yaml file
       if: ${{ inputs.helm_values_file != null }}
       shell: bash
       run: |
-        helm upgrade --install ${{ inputs.release_name }} ${{ inputs.registry_name }}/${{ inputs.chart_name }} --version ${{ inputs.chart_version }} --atomic --cleanup-on-fail --timeout 600s -n ${{ inputs.namespace }}
+        helm upgrade -f ${{ inputs.helm_values_file }}--install ${{ inputs.release_name }} ${{ inputs.registry_name }}/${{ inputs.chart_name }} --version ${{ inputs.chart_version }} --atomic --cleanup-on-fail --timeout 600s -n ${{ inputs.namespace }}
       ###
 
     - name: View state of resources
