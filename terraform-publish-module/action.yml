@@ -1,5 +1,11 @@
 name: "Create Version Tag"
 
+
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    description: "Token for Github access"
+
 on:
   push:
     branches:
@@ -29,3 +35,5 @@ runs:
     - name: Push Version Tag
       shell: bash
       run: git push origin $version
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
