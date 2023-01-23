@@ -12,7 +12,8 @@ runs:
   steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      shell: bash
+      with:
+        fetch-depth: 0
 
     - name: Create Version Tag
       run: |
@@ -29,4 +30,3 @@ runs:
       run: git push origin $version
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      shell: bash
