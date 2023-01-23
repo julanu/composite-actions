@@ -20,19 +20,20 @@ runs:
   steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      shell: bash
-    
+      with:
+        fetch-depth: 0
+  
     - name: Authenticate to Terraform Cloud
-      run: echo "Bearer ${{ inputs.tfc_api_token }}" | tr -d '\n' > ~/.terraformrc
       shell: bash
+      run: echo "Bearer ${{ inputs.tfc_api_token }}" | tr -d '\n' > ~/.terraformrc
       env:
         TERRAFORM_CLI_COLORS: 0
         TERRAFORM_LOG: TRACE
 
     - name: Terraform init
-      run: terraform init
       shell: bash
+      run: terraform init
 
     - name: Publish Terraform Module
-      run: terraform registry publish ${{ inputs.path_to_module }} ${{ inputs.module_name }}/${{ inputs.module_version }}
       shell: bash
+      run: terraform registry publish ${{ inputs.path_to_module }} ${{ inputs.module_name }}/${{ inputs.module_version }}
