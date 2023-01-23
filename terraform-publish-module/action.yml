@@ -1,39 +1,32 @@
-name: "Publish Terraform Module"
+name: "Create Version Tag"
 
-inputs:
-  path_to_module:
-    description: 'Path to the local Terraform module'
-    required: true
-  module_name:
-    description: 'Name of the Terraform module'
-    required: true
-  module_version:
-    description: 'Version of the Terraform module'
-    required: true
-  tfc_api_token:
-    description: 'Terraform Cloud API token'
-    required: true
+on:
+  push:
+    branches:
+      - '**'
+      - 'master'
 
 runs: 
-  using: "composite"
+  using: composite
 
   steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-  
-    - name: Authenticate to Terraform Cloud
       shell: bash
-      run: echo "Bearer ${{ inputs.tfc_api_token }}" | tr -d '\n' > ~/.terraformrc
+
+    - name: Create Version Tag
+      run: |
+        if [ "${{ github.event.ref }}" == "refs/heads/master" ]; then
+          version=$(git tag --sort=-version:refname | head -1 | awk -F. '{print $1"."$2+1}')
+          git tag $version
+        else
+          version=$(git tag --sort=-version:refname | head -1 | awk -F- '{print $1"."$2+1"-"$3}')
+          git tag $version
+        fi
+      shell: bash
+
+    - name: Push Version Tag
+      run: git push origin $version
       env:
-        TERRAFORM_CLI_COLORS: 0
-        TERRAFORM_LOG: TRACE
-
-    - name: Terraform init
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: bash
-      run: terraform init
-
-    - name: Publish Terraform Module
-      shell: bash
-      run: terraform registry publish ${{ inputs.path_to_module }} ${{ inputs.module_name }}/${{ inputs.module_version }}
