@@ -1,0 +1,38 @@
+name: "Publish Terraform Module"
+
+inputs:
+  path_to_module:
+    description: 'Path to the local Terraform module'
+    required: true
+  module_name:
+    description: 'Name of the Terraform module'
+    required: true
+  module_version:
+    description: 'Version of the Terraform module'
+    required: true
+  tfc_api_token:
+    description: 'Terraform Cloud API token'
+    required: true
+
+runs: 
+  using: "composite"
+
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      shell: bash
+    
+    - name: Authenticate to Terraform Cloud
+      run: echo "Bearer ${{ inputs.tfc_api_token }}" | tr -d '\n' > ~/.terraformrc
+      shell: bash
+      env:
+        TERRAFORM_CLI_COLORS: 0
+        TERRAFORM_LOG: TRACE
+
+    - name: Terraform init
+      run: terraform init
+      shell: bash
+
+    - name: Publish Terraform Module
+      run: terraform registry publish ${{ inputs.path_to_module }} ${{ inputs.module_name }}/${{ inputs.module_version }}
+      shell: bash
