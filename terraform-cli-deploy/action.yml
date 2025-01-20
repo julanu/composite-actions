@@ -1,0 +1,27 @@
+name: "Terraform Deployment"
+
+inputs:
+  path_to_tfvars_file:
+    description: "Path to .tfvars file"
+    required: true
+
+runs:
+  using: "composite"
+  
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Init Terraform
+      shell: bash
+      run: terraform init
+
+    - name: Plan Terraform
+      shell: bash
+      run: terraform plan
+
+    - name: Apply Terraform
+      shell: bash
+      run: terraform apply -var-file=${{ inputs.path_to_tfvars_file }}
