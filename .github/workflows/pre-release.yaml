@@ -7,7 +7,7 @@ on:
 jobs:
   pre-release:
     name: "Publish test-release"
-    runs-on: "ubuntu-latest"
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v2
