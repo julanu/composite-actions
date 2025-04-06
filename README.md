@@ -23,6 +23,8 @@ Look for for the latest version available on the [Releases](https://github.com/j
       build_args: -e "token=value"
 ```
 ### 2. Deploy Helm chart to Kubernetes  
+> [!NOTE]  
+> This templates assumes the agent running it is already logged in to Azure and has the necessary permissions setup to deploy
 ```yaml
   # Add Helm repository, update repository, dry-run and install
   - name: Helm Deploy to Kubernetes
@@ -34,4 +36,14 @@ Look for for the latest version available on the [Releases](https://github.com/j
       namespace: testing
       chart_version: 4.1.14
       helm_values_file: values.yaml
+```
+### 3. Terraform Plan & Apply
+> [!NOTE]  
+> This Terraform template will run apply on any branch and doesn't support a lot of parameters that can be provided to Terraform CLI 
+```yaml
+  # Initialize, Validate, Plan and Apply 
+  - name: Terraform
+    uses: julanu/composite-actions/terraform-cli-deploy@latest
+    with:
+      path_to_tfvars_file: infra/dev-eus.tfvars
 ```
