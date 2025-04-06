@@ -42,6 +42,9 @@ runs:
       with:
           fetch-depth: 0
 
+    - name: Install Helm
+      uses: azure/setup-helm@v4.3.0
+
     - name: Add Helm Repository
       shell: bash
       run: helm repo add ${{ inputs.registry_name }} ${{ inputs.registry_url }}
