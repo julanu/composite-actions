@@ -45,4 +45,15 @@ Look for for the latest version available on the [Releases](https://github.com/j
     uses: julanu/composite-actions/terraform-cli-deploy@latest
     with:
       path_to_tfvars_file: infra/dev-eus.tfvars
+``` 
+### 4. Create Version Tag
+> [!NOTE]  
+> This will create a semver-like tag based on the latest one, differing for main and other branches
+
+```yaml
+  # Checkout and create a new version tag
+  - name: Create Version Tag
+    uses: julanu/composite-actions/create-version-tag@latest
+    with:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
