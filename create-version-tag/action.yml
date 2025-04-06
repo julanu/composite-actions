@@ -1,0 +1,39 @@
+name: "Create Version Tag"
+
+
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    description: "Token for Github access"
+
+on:
+  push:
+    branches:
+      - '**'
+      - 'main'
+
+runs: 
+  using: composite
+
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Version Tag
+      shell: bash
+      run: |
+        if [ "${{ github.event.ref }}" == "refs/heads/master" ]; then
+          version=$(git tag --sort=-version:refname | head -1 | awk -F. '{print $1"."$2+1}')
+          git tag $version
+        else
+          version=$(git tag --sort=-version:refname | head -1 | awk -F- '{print $1"."$2+1"-"$3}')
+          git tag $version
+        fi
+
+    - name: Push Version Tag
+      shell: bash
+      run: git push origin $version
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}

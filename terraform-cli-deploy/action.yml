@@ -1,0 +1,33 @@
+name: "Terraform Plan & Apply"
+
+inputs:
+  path_to_tfvars_file:
+    description: "Path to .tfvars file"
+    required: true
+
+runs:
+  using: "composite"
+  
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Install Terraform latest
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Init Terraform
+      shell: bash
+      run: terraform init 
+
+    - name: Terraform Validate
+      shell: bash
+      run: terraform validate -no-color
+
+    - name: Plan Terraform
+      shell: bash
+      run: terraform plan -var-file=${{ inputs.path_to_tfvars_file }}
+
+    - name: Apply Terraform
+      shell: bash
+      run: terraform apply -var-file=${{ inputs.path_to_tfvars_file }}
