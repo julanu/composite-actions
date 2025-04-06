@@ -45,18 +45,18 @@ runs:
 
   steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
           fetch-depth: 0
 
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v3
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v3
 
     - name: Login to DockerHub
-      uses: docker/login-action@v1
+      uses: docker/login-action@v3
       with:
         username: ${{inputs.registry_user}}
         password: ${{inputs.registry_pwd}}
@@ -67,7 +67,7 @@ runs:
 
     - name: Build and Push Docker Image
       id: docker_build
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v6
       with:
         push: true
         tags: ${{inputs.image_name}}:${{inputs.tag}}
