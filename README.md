@@ -7,6 +7,8 @@ Look for for the latest version available on the [Releases](https://github.com/j
 
 
 ### 1. Docker Build & Push Image to DockerHub
+> [!NOTE]  
+> This template assumes Docker is already installed on the agent
 ```yaml
   # Login, build and push Docker image to DockerHub
   - name: Build and Push Docker
@@ -23,7 +25,7 @@ Look for for the latest version available on the [Releases](https://github.com/j
 ```
 ### 2. Deploy Helm chart to Kubernetes  
 > [!NOTE]  
-> This templates assumes the agent running it is already logged in to Azure and has the necessary permissions setup to deploy
+> This template assumes the agent running it is already logged in to Azure and has the necessary permissions setup to deploy
 ```yaml
   # Add Helm repository, update repository, dry-run and install
   - name: Helm Deploy to Kubernetes
@@ -49,7 +51,6 @@ Look for for the latest version available on the [Releases](https://github.com/j
 ### 4. Create Version Tag
 > [!NOTE]  
 > This will create a semver-like tag based on the latest one, differing for main and other branches
-
 ```yaml
   # Checkout and create a new version tag
   - name: Create Version Tag

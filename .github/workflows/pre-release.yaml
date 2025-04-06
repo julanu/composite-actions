@@ -2,7 +2,7 @@
 name: "pre-release-publishing"
 
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   pre-release:
