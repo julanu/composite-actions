@@ -38,9 +38,12 @@ runs:
 
   steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
           fetch-depth: 0
+
+    - name: Install Helm
+      uses: azure/setup-helm@v4.3.0
 
     - name: Add Helm Repository
       shell: bash
