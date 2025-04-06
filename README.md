@@ -1,6 +1,5 @@
-## composite-actions - 
+## composite-actions - not perfect but alright
 Repository containing multiple composite Github Actions(multiple declared in a YML which will evaluate to a single Github Action) for CI/CD pipelines.
-This project assumes that you have a Github self-hosted runner running on your Kubernetes cluster that will have the necessary rights to perform operations on the Kubernetes API.
 <br/>
 
 ## Usage of available composite actions:
