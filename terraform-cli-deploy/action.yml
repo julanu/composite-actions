@@ -1,4 +1,4 @@
-name: "Terraform Deployment"
+name: "Terraform Plan & Apply"
 
 inputs:
   path_to_tfvars_file:
@@ -10,17 +10,23 @@ runs:
   
   steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
+    - name: Install Terraform latest
+      uses: hashicorp/setup-terraform@v3
 
     - name: Init Terraform
       shell: bash
-      run: terraform init
+      run: terraform init 
+
+    - name: Terraform Validate
+      shell: bash
+      run: terraform validate -no-color
 
     - name: Plan Terraform
       shell: bash
-      run: terraform plan
+      run: terraform plan -var-file=${{ inputs.path_to_tfvars_file }}
 
     - name: Apply Terraform
       shell: bash
