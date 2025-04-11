@@ -39,14 +39,15 @@ Look for for the latest version available on the [Releases](https://github.com/j
       helm_values_file: values.yaml
 ```
 ### 3. Terraform Plan & Apply
-> [!NOTE]  
-> This Terraform template will run apply on any branch and doesn't support a lot of parameters that can be provided to Terraform CLI 
 ```yaml
   # Initialize, Validate, Plan and Apply 
   - name: Terraform
     uses: julanu/composite-actions/terraform-cli-deploy@latest
     with:
-      path_to_tfvars_file: infra/dev-eus.tfvars
+      initArguments: "-reconfigure"
+      additionalArguments: "-var-file=env/devel.tfvars -no-color"
+      workingDirectory: "infra/"
+      mainOnlyApply: "false" # Run apply on any branch run. Default runs apply only on main branch run
 ``` 
 ### 4. Create Version Tag
 > [!NOTE]  
