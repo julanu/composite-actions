@@ -7,7 +7,7 @@ inputs:
   additionalArguments:
     description: "Additional arguments to be provided to terraform plan or apply"
     required: false
-  working-directory:
+  workingDirectory:
     description: "Directory where Terraform should be executed"
     required: false
 
@@ -27,7 +27,7 @@ runs:
       id: setdir
       shell: bash
       run: |
-        echo "TF_DIR=${{ inputs.working-directory || '.' }}" >> $GITHUB_ENV
+        echo "TF_DIR=${{ inputs.workingDirectory || '.' }}" >> $GITHUB_ENV
 
     - name: Init Terraform
       shell: bash
@@ -46,5 +46,5 @@ runs:
 
     - name: Apply Terraform
       shell: bash
-      run: terraform apply ${{ inputs.additionalArguments }}
+      run: terraform apply -auto-approve ${{ inputs.additionalArguments }}
       working-directory: ${{ env.TF_DIR }}

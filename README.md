@@ -48,7 +48,7 @@ Look for for the latest version available on the [Releases](https://github.com/j
     with:
       initArguments: "-reconfigure"
       additionalArguments: "-var-file=env/devel.tfvars -no-color"
-      working-directory: "infra/"
+      workingDirectory: "infra/"
 ``` 
 ### 4. Create Version Tag
 > [!NOTE]  
