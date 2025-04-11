@@ -46,7 +46,9 @@ Look for for the latest version available on the [Releases](https://github.com/j
   - name: Terraform
     uses: julanu/composite-actions/terraform-cli-deploy@latest
     with:
-      path_to_tfvars_file: infra/dev-eus.tfvars
+      initArguments: "-reconfigure"
+      additionalArguments: "-var-file=env/devel.tfvars -no-color"
+      working-directory: "infra/"
 ``` 
 ### 4. Create Version Tag
 > [!NOTE]  

@@ -1,33 +1,50 @@
 name: "Terraform Plan & Apply"
 
 inputs:
-  path_to_tfvars_file:
-    description: "Path to .tfvars file"
-    required: true
+  initArguments:
+    description: "Additional arguments to be supplied to the init command"
+    required: false
+  additionalArguments:
+    description: "Additional arguments to be provided to terraform plan or apply"
+    required: false
+  working-directory:
+    description: "Directory where Terraform should be executed"
+    required: false
 
 runs:
   using: "composite"
-  
+
   steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
     - name: Install Terraform latest
       uses: hashicorp/setup-terraform@v3
 
+    - name: Set working directory
+      id: setdir
+      shell: bash
+      run: |
+        echo "TF_DIR=${{ inputs.working-directory || '.' }}" >> $GITHUB_ENV
+
     - name: Init Terraform
       shell: bash
-      run: terraform init 
+      run: terraform init ${{ inputs.initArguments }}
+      working-directory: ${{ env.TF_DIR }}
 
     - name: Terraform Validate
       shell: bash
       run: terraform validate -no-color
+      working-directory: ${{ env.TF_DIR }}
 
     - name: Plan Terraform
       shell: bash
-      run: terraform plan -var-file=${{ inputs.path_to_tfvars_file }}
+      run: terraform plan ${{ inputs.additionalArguments }}
+      working-directory: ${{ env.TF_DIR }}
 
     - name: Apply Terraform
       shell: bash
-      run: terraform apply -var-file=${{ inputs.path_to_tfvars_file }}
+      run: terraform apply ${{ inputs.additionalArguments }}
+      working-directory: ${{ env.TF_DIR }}
