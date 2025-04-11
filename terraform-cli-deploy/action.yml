@@ -10,6 +10,10 @@ inputs:
   workingDirectory:
     description: "Directory where Terraform should be executed"
     required: false
+  mainOnlyApply:
+    description: "If true, restrict apply to main branch only"
+    default: "true"
+    required: false
 
 runs:
   using: "composite"
@@ -45,6 +49,7 @@ runs:
       working-directory: ${{ env.TF_DIR }}
 
     - name: Apply Terraform
+      if: ${{ inputs.mainOnlyApply != 'true' || github.ref == 'refs/heads/main' }}
       shell: bash
       run: terraform apply -auto-approve ${{ inputs.additionalArguments }}
       working-directory: ${{ env.TF_DIR }}
