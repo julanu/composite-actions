@@ -1,0 +1,55 @@
+name: "OpenTofu Plan & Apply"
+
+inputs:
+  initArguments:
+    description: "Additional arguments to be supplied to the init command"
+    required: false
+  additionalArguments:
+    description: "Additional arguments to be provided to tofu plan or apply"
+    required: false
+  workingDirectory:
+    description: "Directory where OpenTofu should be executed"
+    required: false
+  mainOnlyApply:
+    description: "If true, restrict apply to main branch only"
+    default: "true"
+    required: false
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install OpenTofu latest
+      uses: opentofu/setup-opentofu@v1
+
+    - name: Set working directory
+      id: setdir
+      shell: bash
+      run: |
+        echo "TF_DIR=${{ inputs.workingDirectory || '.' }}" >> $GITHUB_ENV
+
+    - name: Init OpenTofu
+      shell: bash
+      run: tofu init ${{ inputs.initArguments }}
+      working-directory: ${{ env.TF_DIR }}
+
+    - name: Validate OpenTofu
+      shell: bash
+      run: tofu validate -no-color
+      working-directory: ${{ env.TF_DIR }}
+
+    - name: Plan OpenTofu
+      shell: bash
+      run: tofu plan ${{ inputs.additionalArguments }}
+      working-directory: ${{ env.TF_DIR }}
+
+    - name: Apply OpenTofu
+      if: ${{ inputs.mainOnlyApply != 'true' || github.ref == 'refs/heads/main' }}
+      shell: bash
+      run: tofu apply -auto-approve ${{ inputs.additionalArguments }}
+      working-directory: ${{ env.TF_DIR }}

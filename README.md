@@ -59,3 +59,13 @@ Look for for the latest version available on the [Releases](https://github.com/j
     with:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+### 5. OpenTofu Plan & Apply
+```yaml
+- name: OpenTofu
+  uses: your-org/your-repo/opentofu-cli-deploy@latest
+  with:
+    initArguments: "-reconfigure"
+    additionalArguments: "-var-file=env/devel.tfvars -no-color"
+    workingDirectory: "infra/"
+    mainOnlyApply: "false" # Run apply on any branch. Default runs apply only on main branch
+```
